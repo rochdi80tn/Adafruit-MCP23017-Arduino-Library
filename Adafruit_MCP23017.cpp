@@ -114,28 +114,23 @@ void Adafruit_MCP23017::updateRegisterBit(uint8_t pin, uint8_t pValue,
  * Address selection.
  * @param addr Selected address
  * @param theWire the I2C object to use, defaults to &Wire
+ * @param initAsInputs the default ports pin mode to set using dfined constants
+ *        MCP23017_INIT_AS_INPUTS, MCP23017_INIT_AS_OUPUTS or MCP23017_INIT_AS_NONE
  */
-void Adafruit_MCP23017::begin(uint8_t addr, TwoWire *theWire) {
-  if (addr > 7) {
-    addr = 7;
-  }
-  i2caddr = addr;
+void Adafruit_MCP23017::begin(uint8_t addr, TwoWire *theWire, bool  initAsInputsInputs) {
+
   _wire = theWire;
-
   _wire->begin();
+  changeAddress(addr, initAsInputs);
 
-  // set defaults!
-  // all inputs on port A and B
-  writeRegister(MCP23017_IODIRA, 0xff);
-  writeRegister(MCP23017_IODIRB, 0xff);
 }
 
 /**
  * Initializes the default MCP23017, with 000 for the configurable part of the
- * address
+ * address amd INPUT as default pins mode.
  * @param theWire the I2C object to use, defaults to &Wire
  */
-void Adafruit_MCP23017::begin(TwoWire *theWire) { begin(0, theWire); }
+void Adafruit_MCP23017::begin(TwoWire *theWire) { begin(0, theWire, true); }
 
 /**
  * Sets the pin mode to either INPUT or OUTPUT
@@ -351,4 +346,32 @@ uint8_t Adafruit_MCP23017::getLastInterruptPinValue() {
   }
 
   return MCP23017_INT_ERR;
+}
+
+/**
+ * Sets the i2caddr with the provided param.
+ * Complete i2c address is supported e.g. 0x20
+ * address
+ * @param addr the I2C address
+ * @param initAsInputs the default ports pin mode to set
+ */
+void Adafruit_MCP23017::changeAddress(uint8_t addr, bool initAsInputs){
+
+  // allow using both syntaxes, complete i2x address or address pin setting
+  if ((addr >= MCP23017_ADDRESS) && (addr < (MCP23017_ADDRESS+8))) {
+    addr -= MCP23017_ADDRESS;
+  }
+
+  if (addr > 7) {
+    addr = 7;
+  }
+
+  i2caddr = addr;
+
+  if (initAsInputs) {
+    // set all inputs on port A and B
+    writeRegister(MCP23017_IODIRA, 0xFF);
+    writeRegister(MCP23017_IODIRB, 0xFF);
+  }
+
 }

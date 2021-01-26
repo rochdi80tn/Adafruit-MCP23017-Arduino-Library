@@ -23,7 +23,7 @@
  */
 class Adafruit_MCP23017 {
 public:
-  void begin(uint8_t addr, TwoWire *theWire = &Wire);
+  void begin(uint8_t addr, TwoWire *theWire = &Wire, bool initAsInputs=true);
   void begin(TwoWire *theWire = &Wire);
 
   void pinMode(uint8_t p, uint8_t d);
@@ -41,6 +41,8 @@ public:
   void setupInterruptPin(uint8_t p, uint8_t mode);
   uint8_t getLastInterruptPin();
   uint8_t getLastInterruptPinValue();
+
+  void changeAddress(uint8_t addr, bool initAsInputs=false);
 
 private:
   uint8_t i2caddr;
