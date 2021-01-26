@@ -117,7 +117,7 @@ void Adafruit_MCP23017::updateRegisterBit(uint8_t pin, uint8_t pValue,
  * @param initAsInputs the default ports pin mode to set using dfined constants
  *        MCP23017_INIT_AS_INPUTS, MCP23017_INIT_AS_OUPUTS or MCP23017_INIT_AS_NONE
  */
-void Adafruit_MCP23017::begin(uint8_t addr, TwoWire *theWire, bool  initAsInputsInputs) {
+void Adafruit_MCP23017::begin(uint8_t addr, TwoWire *theWire, bool  initAsInputs) {
 
   _wire = theWire;
   _wire->begin();
